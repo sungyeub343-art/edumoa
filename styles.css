@@ -81,6 +81,7 @@ h2 { margin: 0; font-family: "Gowun Batang", serif; font-size: clamp(2.3rem, 5vw
 .contact-form label > span { font-size: .86rem; font-weight: 700; }
 .contact-form input:not([type="checkbox"]), .contact-form select, .contact-form textarea { width: 100%; padding: .8rem .2rem; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid #668083; border-radius: 0; outline: none; }
 .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: var(--ink); box-shadow: 0 1px 0 var(--ink); }
+.form-honeypot { display: none !important; }
 .full-width { grid-column: 1 / -1; }
 .consent { display: flex; align-items: center; gap: .65rem; }
 .consent input { width: 18px; height: 18px; accent-color: var(--deep); }
