@@ -75,6 +75,7 @@ h2 { margin: 0; font-family: "Gowun Batang", serif; font-size: clamp(2.3rem, 5vw
 
 .contact { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(3rem, 8vw, 8rem); padding: 7rem max(24px, calc((100% - var(--max-width))/2)); background: var(--mint); }
 .contact-heading > p:last-child { max-width: 400px; margin-top: 2rem; color: #435d5e; }
+.contact-phone { display: inline-block; margin-top: 1rem; padding-bottom: .2rem; border-bottom: 2px solid var(--deep); font-family: "Gowun Batang", serif; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700; line-height: 1.2; }
 .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-content: start; }
 .contact-form label:not(.consent) { display: flex; flex-direction: column; gap: .45rem; }
 .contact-form label > span { font-size: .86rem; font-weight: 700; }
@@ -138,7 +139,7 @@ footer > p { margin: 0; }
 
 @media (max-width: 600px) {
   .site-header { width: calc(100% - 32px); height: 72px; }
-  .header-cta { padding: .5rem .7rem; }
+  .header-cta { padding: .45rem .55rem; font-size: .78rem; }
   .hero { min-height: 760px; }
   .hero-content { width: calc(100% - 32px); padding-top: 180px; }
   .hero h1 { font-size: clamp(3.5rem, 18vw, 5.2rem); }
