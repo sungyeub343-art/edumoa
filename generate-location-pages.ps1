@@ -55,6 +55,7 @@ function Get-Head([string]$Title, [string]$Description, [string]$Canonical) {
   <meta property="og:description" content="$Description">
   <meta property="og:url" content="$Canonical">
   <link rel="canonical" href="$Canonical">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
