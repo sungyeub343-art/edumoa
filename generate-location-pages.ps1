@@ -50,6 +50,7 @@ function Get-Head([string]$Title, [string]$Description, [string]$Canonical, [str
   <title>$Title</title>
   <meta name="description" content="$Description">
   <meta name="naver-site-verification" content="050bf0bd63259510b4235941a5eba51d1bc56f7a">
+  <meta name="google-site-verification" content="mp9AG8O31zZiZPC730xmcZrV1MZHnuJm0fWYdXh7lxY">
   <meta name="theme-color" content="#123c43">
   <meta property="og:type" content="website">
   <meta property="og:title" content="$Title">
