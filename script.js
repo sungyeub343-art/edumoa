@@ -1,8 +1,20 @@
 const form = document.querySelector("#consultation-form");
 const formStatus = document.querySelector("#form-status");
 const year = document.querySelector("#year");
+const regionDialog = document.querySelector("#region-dialog");
 
 if (year) year.textContent = new Date().getFullYear();
+
+if (regionDialog instanceof HTMLDialogElement) {
+  regionDialog.showModal();
+  document.body.classList.add("region-dialog-open");
+  regionDialog.addEventListener("close", () => {
+    document.body.classList.remove("region-dialog-open");
+  });
+  regionDialog.addEventListener("click", (event) => {
+    if (event.target === regionDialog) regionDialog.close();
+  });
+}
 
 if (form && formStatus) {
   const query = new URLSearchParams(window.location.search);
