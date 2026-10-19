@@ -148,7 +148,7 @@ $regionFaqs = @(
   '{P} 수학과외는 어떤 학생이 수업하나요?|초등학생부터 중학생, 고등학생까지 수업합니다. 예비중1부터 예비고3까지 다음 학년을 준비하는 과정도 상담할 수 있습니다.',
   '첫 수업 전에 무엇을 확인하나요?|최근 시험지와 사용 중인 교재, 평소 공부 시간과 목표를 확인해 취약점을 진단하고 수업 계획을 세웁니다.',
   '{P}에서 방문 수업이 가능한가요?|거주 위치와 희망 시간을 확인한 뒤 대면 수업 가능 여부를 안내합니다. 이동이 어려운 경우 온라인 수업도 협의할 수 있습니다.',
-  '상담은 어떻게 신청하나요?|010-2928-3614로 전화하시거나 홈페이지 상담 신청서에 학생 학년과 고민을 남겨주시면 확인 후 연락드립니다.'
+  '상담은 어떻게 신청하나요?|010-2928-3614로 전화 주시면 학생의 학년과 고민을 듣고 수업 방향을 안내해 드립니다.'
 )
 
 $lessonFlow = @"
@@ -292,10 +292,10 @@ function Write-Page {
     </section>
     <div class="location-layout">
 $Body
-      <section class="location-cta"><div><p class="section-number">CONTACT</p><h2>$CtaTitle</h2></div><div class="cta-actions"><a class="button" href="tel:010-2928-3614">전화 상담 010-2928-3614</a><a class="button button-outline" href="$root/#contact">상담 신청서 작성</a></div></section>
+      <section class="location-cta"><div><p class="section-number">CONTACT</p><h2>$CtaTitle</h2></div><div class="cta-actions"><a class="button" href="tel:010-2928-3614">전화 상담 010-2928-3614</a></div></section>
     </div>
   </main>
-  <footer><a class="brand footer-brand" href="$root/"><span class="brand-mark" aria-hidden="true">∑</span><span>경기 수학과외</span></a><p>학생의 이해에서 시작하는 1:1 맞춤 수업</p><nav class="footer-links" aria-label="학교급별 수학과외"><a href="$root/elementary/">경기 초등 수학과외</a><a href="$root/middle/">경기 중등 수학과외</a><a href="$root/high/">경기 고등 수학과외</a><a href="$root/#contact">상담 신청</a></nav><p class="copyright">© 2026 경기 수학과외</p></footer>
+  <footer><a class="brand footer-brand" href="$root/"><span class="brand-mark" aria-hidden="true">∑</span><span>경기 수학과외</span></a><p>학생의 이해에서 시작하는 1:1 맞춤 수업</p><nav class="footer-links" aria-label="학교급별 수학과외"><a href="$root/elementary/">경기 초등 수학과외</a><a href="$root/middle/">경기 중등 수학과외</a><a href="$root/high/">경기 고등 수학과외</a><a href="tel:010-2928-3614">전화 상담 010-2928-3614</a></nav><p class="copyright">© 2026 경기 수학과외</p></footer>
 </body>
 </html>
 "@

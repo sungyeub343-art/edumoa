@@ -91,20 +91,11 @@ h2 { margin: 0; font-family: "Gowun Batang", serif; font-size: clamp(2.3rem, 5vw
 .districts a { display: grid; place-items: center; min-height: 96px; padding: .7rem; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); font-family: "Gowun Batang", serif; font-size: 1.05rem; transition: background .2s, color .2s; }
 .districts a:hover, .districts a:focus-visible { color: white; background: var(--deep); }
 
-.contact { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(3rem, 8vw, 8rem); padding: 7rem max(24px, calc((100% - var(--max-width))/2)); background: var(--mint); }
+.contact { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: clamp(3rem, 8vw, 8rem); padding: 7rem max(24px, calc((100% - var(--max-width))/2)); background: var(--mint); }
 .contact-heading > p:last-child { max-width: 400px; margin-top: 2rem; color: #435d5e; }
 .contact-phone { display: inline-block; margin-top: 1rem; padding-bottom: .2rem; border-bottom: 2px solid var(--deep); font-family: "Gowun Batang", serif; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700; line-height: 1.2; }
-.contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-content: start; }
-.contact-form label:not(.consent) { display: flex; flex-direction: column; gap: .45rem; }
-.contact-form label > span { font-size: .86rem; font-weight: 700; }
-.contact-form input:not([type="checkbox"]), .contact-form select, .contact-form textarea { width: 100%; padding: .8rem .2rem; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid #668083; border-radius: 0; outline: none; }
-.contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: var(--ink); box-shadow: 0 1px 0 var(--ink); }
-.form-honeypot { display: none !important; }
-.full-width { grid-column: 1 / -1; }
-.consent { display: flex; align-items: center; gap: .65rem; }
-.consent input { width: 18px; height: 18px; accent-color: var(--deep); }
+.contact-call { display: flex; flex-direction: column; align-items: flex-start; gap: 1.5rem; }
 .button-submit { color: white; background: var(--deep); }
-.form-status { min-height: 1.5rem; margin: 0; font-size: .9rem; }
 
 .location-page .site-header { position: relative; left: auto; width: 100%; height: 80px; padding: 0 max(24px, calc((100% - var(--max-width))/2)); transform: none; background: var(--deep); }
 .location-hero { padding: 5.5rem max(24px, calc((100% - var(--max-width))/2)) 6rem; color: white; background: var(--deep); }
@@ -134,7 +125,6 @@ h2 { margin: 0; font-family: "Gowun Batang", serif; font-size: clamp(2.3rem, 5vw
 .location-cta { display: flex; justify-content: space-between; align-items: center; gap: 2rem; margin-top: 6rem; padding: 2.5rem; color: white; background: var(--deep); }
 .location-cta h2 { font-size: clamp(1.8rem, 4vw, 3.1rem); }
 .location-cta .button { flex: 0 0 auto; color: var(--deep); background: var(--coral); }
-.location-cta .button.button-outline { color: white; background: transparent; border: 1px solid rgba(255,255,255,.7); }
 .cta-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
 
 .levels { max-width: var(--max-width); margin: 0 auto; padding: 8rem 24px 0; }
@@ -208,9 +198,7 @@ footer > p { margin: 0; }
   .districts { grid-template-columns: repeat(2, 1fr); }
   .districts a { min-height: 82px; }
   .contact { padding: 6rem 16px; }
-  .contact-form { grid-template-columns: 1fr; }
-  .contact-form > * { grid-column: 1; }
-  .location-page .site-header { padding: 0 16px; }
+      .location-page .site-header { padding: 0 16px; }
   .location-hero { padding: 4rem 16px 5rem; }
   .location-hero h1 { font-size: 2.8rem; word-break: keep-all; }
   .location-layout { padding: 5rem 16px; }
