@@ -5,7 +5,10 @@ const regionDialog = document.querySelector("#region-dialog");
 
 if (year) year.textContent = new Date().getFullYear();
 
-if (regionDialog instanceof HTMLDialogElement) {
+// 상담 신청서 링크(#contact)나 제출 완료 후 돌아온 경우에는 지역 선택 창을 띄우지 않습니다.
+const skipRegionDialog = window.location.hash !== "" || new URLSearchParams(window.location.search).has("submitted");
+
+if (regionDialog instanceof HTMLDialogElement && !skipRegionDialog) {
   regionDialog.showModal();
   document.body.classList.add("region-dialog-open");
   regionDialog.addEventListener("close", () => {
