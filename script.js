@@ -5,8 +5,17 @@ const regionDialog = document.querySelector("#region-dialog");
 
 if (year) year.textContent = new Date().getFullYear();
 
-// 상담 신청서 링크(#contact)나 제출 완료 후 돌아온 경우에는 지역 선택 창을 띄우지 않습니다.
-const skipRegionDialog = window.location.hash !== "" || new URLSearchParams(window.location.search).has("submitted");
+// 지역 선택 창은 방문(브라우저 세션)당 한 번만 띄웁니다.
+// 상담 신청서 링크(#contact)나 제출 완료 후 돌아온 경우에도 띄우지 않습니다.
+const regionDialogKey = "regionDialogShown";
+let regionDialogShown = false;
+try {
+  regionDialogShown = sessionStorage.getItem(regionDialogKey) === "1";
+  sessionStorage.setItem(regionDialogKey, "1");
+} catch (error) {
+  regionDialogShown = document.referrer.startsWith(window.location.origin);
+}
+const skipRegionDialog = regionDialogShown || window.location.hash !== "" || new URLSearchParams(window.location.search).has("submitted");
 
 if (regionDialog instanceof HTMLDialogElement && !skipRegionDialog) {
   regionDialog.showModal();
