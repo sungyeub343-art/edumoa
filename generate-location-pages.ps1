@@ -269,7 +269,9 @@ function Write-Page {
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="$canonical">
   <link rel="alternate" type="application/rss+xml" title="경기 수학과외" href="$siteUrl/rss.xml">
+  <link rel="icon" href="$root/favicon.ico" sizes="48x48">
   <link rel="icon" href="$root/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="$root/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
