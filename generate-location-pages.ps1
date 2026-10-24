@@ -1,7 +1,7 @@
 ﻿$ErrorActionPreference = 'Stop'
 
 $siteUrl = 'https://edumoa.kr'
-$lastmod = '2026-10-19'
+$lastmod = '2026-10-24'
 $ogImage = 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&amp;fit=crop&amp;w=1200&amp;h=630&amp;q=80'
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 
@@ -297,7 +297,7 @@ $Body
       <section class="location-cta"><div><p class="section-number">CONTACT</p><h2>$CtaTitle</h2></div><div class="cta-actions"><a class="button" href="tel:010-2928-3614">전화 상담 010-2928-3614</a></div></section>
     </div>
   </main>
-  <footer><a class="brand footer-brand" href="$root/"><span class="brand-mark" aria-hidden="true">∑</span><span>경기 수학과외</span></a><p>학생의 이해에서 시작하는 1:1 맞춤 수업</p><nav class="footer-links" aria-label="학교급별 수학과외"><a href="$root/elementary/">경기 초등 수학과외</a><a href="$root/middle/">경기 중등 수학과외</a><a href="$root/high/">경기 고등 수학과외</a><a href="tel:010-2928-3614">전화 상담 010-2928-3614</a></nav><p class="copyright">© 2026 경기 수학과외</p></footer>
+  <footer><a class="brand footer-brand" href="$root/"><span class="brand-mark" aria-hidden="true">∑</span><span>경기 수학과외</span></a><p>학생의 이해에서 시작하는 1:1 맞춤 수업</p><nav class="footer-links" aria-label="학교급별 수학과외"><a href="$root/elementary/">경기 초등 수학과외</a><a href="$root/middle/">경기 중등 수학과외</a><a href="$root/high/">경기 고등 수학과외</a><a href="$root/visiting/">수학 방문과외</a><a href="$root/online/">온라인 수학과외</a><a href="$root/towns/">신도시 수학과외</a><a href="tel:010-2928-3614">전화 상담 010-2928-3614</a></nav><p class="copyright">© 2026 경기 수학과외</p></footer>
 </body>
 </html>
 "@
@@ -348,6 +348,186 @@ function Get-OtherLevelLinks($Place, $Level) {
     return $links
 }
 
+# 신도시·생활권 페이지: 'slug|이름|상위 지역 경로|제목용 생활권|소개 문장'
+$towns = @(
+  'gwanggyo|광교|areas/suwon-si/yeongtong-gu/|광교신도시|광교는 수원 영통구·팔달구와 용인 수지구에 걸쳐 있어 같은 생활권이라도 다니는 학교와 시험 일정이 다를 수 있습니다. 학생이 다니는 학교의 진도와 시험 범위를 먼저 확인합니다.',
+  'dongtan|동탄|areas/hwaseong-si/dongtan-gu/|동탄신도시|동탄은 1·2신도시로 생활권이 넓고 학교마다 진도와 출제 경향이 다양합니다. 거주 위치와 수업 가능 시간을 함께 확인해 대면 또는 온라인 수업을 안내합니다.',
+  'pangyo|판교|areas/seongnam-si/bundang-gu/|판교·백현·삼평|판교·백현·삼평·운중 생활권 학생의 학교 진도와 목표를 확인해, 다음 학년 진도보다 현재 학년 개념의 완성도를 먼저 점검합니다.',
+  'ilsan|일산|areas/goyang-si/|일산 백석·주엽·대화|일산은 일산동구와 일산서구에 걸쳐 백석·마두·주엽·대화·탄현까지 생활권이 넓습니다. 학교별 시험 범위와 이동 여건을 함께 고려해 수업을 계획합니다.',
+  'pyeongchon|평촌|areas/anyang-si/dongan-gu/|평촌·범계|평촌은 학원이 밀집한 생활권으로, 학원 수업과 병행하는 학생은 학원 진도와 학교 내신 범위를 함께 정리해 비어 있는 단원을 보완합니다.',
+  'sanbon|산본|areas/gunpo-si/|산본신도시|산본신도시 학생의 학교별 시험 범위와 현재 학습 수준을 확인해 내신 일정에 맞춘 수업 계획을 세웁니다.',
+  'wirye|위례|areas/seongnam-si/sujeong-gu/|위례신도시|위례신도시는 성남 수정구, 하남, 서울 송파에 걸쳐 있어 다니는 학교에 따라 일정이 다릅니다. 성남·하남 지역 학생을 중심으로 학교 진도와 시험 범위를 확인합니다.',
+  'misa|미사|areas/hanam-si/|미사강변도시|미사강변도시 학생의 학교 진도와 내신 일정, 학원 병행 여부를 확인해 필요한 단원부터 정리합니다.',
+  'dasan|다산|areas/namyangju-si/|다산신도시|다산신도시 학생의 학교별 진도와 시험 범위를 확인하고, 생활권에 맞춰 수업 가능 시간을 조율합니다.',
+  'byeollae|별내|areas/namyangju-si/|별내신도시|별내신도시 학생의 학교 일정과 학습 목표를 확인하고, 이동 여건에 따라 대면 또는 온라인 수업을 안내합니다.',
+  'unjeong|운정|areas/paju-si/|운정신도시|운정신도시 학생의 학교별 진도와 시험 일정을 확인해 개념 보완과 내신 대비의 순서를 정합니다.',
+  'baegot|배곧|areas/siheung-si/|배곧신도시|배곧신도시 학생의 학교 진도와 현재 학습 수준을 확인해 필요한 단원부터 차근차근 수업합니다.',
+  'jukjeon|죽전|areas/yongin-si/suji-gu/|죽전·보정|죽전·보정 생활권 학생의 학교별 내신 일정과 진도를 확인해 학생에게 맞는 수업 순서를 정합니다.',
+  'homaesil|호매실|areas/suwon-si/gwonseon-gu/|호매실·금곡|호매실·금곡 생활권 학생의 학교 진도와 학습 습관을 확인하고 취약 단원을 중심으로 수업을 계획합니다.',
+  'godeok|고덕|areas/pyeongtaek-si/|고덕국제신도시|고덕국제신도시 학생의 학교 일정과 학습 목표를 확인하고 생활권과 이동 여건에 맞춰 수업 방식을 안내합니다.',
+  'okjeong|옥정|areas/yangju-si/|옥정신도시|옥정신도시 학생의 학교별 진도와 현재 학습 단계를 확인해 개념 보완과 내신 준비를 연결합니다.'
+) | ForEach-Object {
+    $parts = $_.Split('|')
+    $pathParts = $parts[2].Split('/')
+    $cityArea = $areas | Where-Object { $_.Slug -eq $pathParts[1] }
+    $parentCrumbs = @([pscustomobject]@{ Name = $cityArea.Name; Path = "areas/$($cityArea.Slug)/" })
+    $parentName = $cityArea.Short
+    if ($pathParts[2]) {
+        $districtName = ($cityArea.Districts | Where-Object { $_.StartsWith("$($pathParts[2])|") }).Split('|')[1]
+        $parentCrumbs += [pscustomobject]@{ Name = $districtName; Path = $parts[2] }
+        $parentName = $districtName
+    }
+    [pscustomobject]@{ Slug = $parts[0]; Name = $parts[1]; Parent = $parts[2]; ParentName = $parentName; CityName = $cityArea.Name; ParentCrumbs = $parentCrumbs; Spots = $parts[3]; Point = $parts[4] }
+}
+
+# 수업 방식·학년 전환 주제 페이지
+$topicPages = @(
+  [pscustomobject]@{
+    Slug = 'visiting'; Name = '수학 방문과외'; En = 'VISITING TUTORING'
+    Title = '경기 수학 방문과외 | 초등·중등·고등 1:1 방문 수학 수업'
+    Description = '경기도 수학 방문과외. 학생이 공부하는 공간에서 초등 기초수학, 중등 수학내신, 고등 수능수학까지 1:1로 수업합니다. 방문 가능 지역 상담 010-2928-3614'
+    Heading = '수학<br>방문과외'
+    Hero = '이동 시간을 줄이고 익숙한 공간에서 집중할 수 있도록, 학생의 위치와 시간에 맞춰 1:1 방문 수업 가능 여부를 안내합니다.'
+    IntroTitle = '익숙한 공간에서<br>집중하는 1:1 수업'
+    Intros = @(
+      '수학 방문과외는 학생이 평소 공부하는 공간에서 수업이 이루어져 이동 부담이 적고, 공부 환경과 학습 습관까지 함께 살필 수 있습니다.',
+      '방문 가능 여부는 거주 지역과 희망 요일·시간에 따라 달라지므로 상담에서 먼저 확인합니다. 방문이 어려운 경우 온라인 수업으로 같은 계획을 이어갈 수 있습니다.'
+    )
+    Topics = @(
+      '초등 수학 방문과외|아이가 편안한 공간에서 연산과 분수, 문장제처럼 자주 흔들리는 기초수학을 차근차근 다지고 매일 이어지는 수학공부 습관을 만듭니다.',
+      '중등 수학 방문과외|학교 교과서와 프린트를 함께 보며 학교별 수학내신 범위를 정리하고 서술형 풀이와 오답을 꼼꼼하게 점검합니다.',
+      '고등 수학 방문과외|내신 기출과 모의고사 결과를 바탕으로 취약 단원을 정리하고 수학내신과 수능수학 준비의 비중을 시기별로 조정합니다.',
+      '첫 수업 준비|최근 시험지, 학교 교과서와 사용 중인 문제집, 오답 노트를 준비해 주시면 첫 수업부터 정확하게 진단할 수 있습니다.',
+      '방문과외와 학원|학원은 정해진 진도로 여러 학생이 함께 배우고, 방문과외는 한 학생의 속도와 취약점에 맞춰 설명을 조절합니다. 학원과 병행하며 부족한 부분만 보완할 수도 있습니다.',
+      '방문 수업 지역|수원, 성남, 용인, 고양, 화성 등 경기도 31개 시·군 학생을 상담합니다. 정확한 방문 가능 여부는 주소와 시간을 확인한 뒤 안내합니다.'
+    )
+    Faqs = @(
+      '방문과외는 어느 지역까지 가능한가요?|경기도 31개 시·군 학생을 상담합니다. 거주 위치와 희망 시간을 확인한 뒤 방문 가능 여부를 안내하며, 어려운 경우 온라인 수업을 협의합니다.',
+      '방문 수업을 위해 무엇을 준비하면 되나요?|학생이 집중할 수 있는 책상과 최근 시험지, 교과서, 사용 중인 문제집이면 충분합니다.',
+      '학원과 함께 다녀도 되나요?|네. 학원 진도와 학교 범위를 확인해 부족한 단원과 오답을 중심으로 보완 수업을 할 수 있습니다.',
+      '수업 시간은 어떻게 정하나요?|학생의 학년, 학교·학원 일정, 집중할 수 있는 시간에 맞춰 상담 시 정합니다.'
+    )
+  },
+  [pscustomobject]@{
+    Slug = 'online'; Name = '온라인 수학과외'; En = 'ONLINE TUTORING'
+    Title = '온라인 수학과외 | 경기 초등·중등·고등 1:1 화상 수학 수업'
+    Description = '경기도 온라인 수학과외. 이동 없이 초등 기초수학, 중등 수학내신, 고등 수능수학까지 1:1 화상 수업으로 진단하고 관리합니다. 상담 010-2928-3614'
+    Heading = '온라인<br>수학과외'
+    Hero = '거리와 이동 시간 때문에 대면 수업이 어려운 학생도 같은 진단과 계획으로 1:1 수학 수업을 받을 수 있습니다.'
+    IntroTitle = '거리와 상관없이<br>같은 밀도의 수업'
+    Intros = @(
+      '온라인 수학과외는 화상으로 진행하는 1:1 수업입니다. 학생이 푸는 과정을 화면으로 함께 보며 막히는 지점에서 바로 설명하므로, 대면 수업과 같은 방식으로 진단하고 피드백합니다.',
+      '양평·가평·연천처럼 이동 거리가 긴 지역이나 학교·학원 일정이 빠듯한 학생에게 특히 알맞으며, 상황에 따라 대면 수업과 온라인 수업을 병행할 수도 있습니다.'
+    )
+    Topics = @(
+      '초등 온라인 수학|짧은 집중 시간에 맞춰 수업을 구성하고 화면 속 그림과 판서로 수 감각과 연산 원리를 설명합니다.',
+      '중등 온라인 수학|학교 교과서와 프린트를 화면으로 공유해 수학내신 범위를 정리하고 서술형 풀이를 함께 점검합니다.',
+      '고등 온라인 수학|모의고사와 내신 기출을 함께 보며 취약 단원을 정리하고 수능수학 실전 풀이를 훈련합니다.',
+      '수업 준비 환경|노트북이나 태블릿과 안정적인 인터넷이 있으면 수업할 수 있습니다. 풀이를 보여주는 방법 등 세부 방식은 상담 시 안내합니다.',
+      '대면 · 온라인 병행|평소에는 대면으로, 시험 기간이나 일정이 바쁠 때는 온라인으로 전환해 학습 흐름이 끊기지 않게 할 수 있습니다.',
+      '과제와 오답 관리|수업 뒤 과제와 오답을 사진이나 파일로 확인해 다음 수업의 우선순위를 정합니다.'
+    )
+    Faqs = @(
+      '온라인 수학과외도 대면 수업만큼 효과가 있나요?|학생의 풀이 과정을 실시간으로 보며 설명하기 때문에 진단과 피드백 방식은 같습니다. 집중 시간이 짧은 학생은 수업 구성을 조정합니다.',
+      '어떤 장비가 필요한가요?|노트북이나 태블릿과 안정적인 인터넷이 필요합니다. 필기 방식 등 세부 내용은 상담 시 안내합니다.',
+      '대면 수업과 섞어서 할 수 있나요?|네. 거주 지역과 일정에 따라 대면과 온라인을 병행하는 방식도 협의할 수 있습니다.',
+      '초등학생도 온라인 수업이 가능한가요?|가능합니다. 집중 시간에 맞춰 수업 길이와 활동을 조절하고, 필요한 경우 보호자와 수업 방식을 먼저 상의합니다.'
+    )
+  },
+  [pscustomobject]@{
+    Slug = 'pre-middle1'; Name = '예비중1 수학과외'; En = 'PRE MIDDLE 1'
+    Title = '예비중1 수학과외 | 경기 초6 겨울방학 중1 수학 준비 1:1'
+    Description = '경기 예비중1 수학과외. 초등 분수·소수 연산과 문장제 빈틈을 점검하고 정수, 문자와 식, 일차방정식으로 중1 첫 시험을 준비합니다. 상담 010-2928-3614'
+    Heading = '예비중1<br>수학과외'
+    Hero = '중학교 수학의 첫 단원은 초등에서 배운 수와 연산 위에 쌓입니다. 초등 과정의 빈틈부터 확인하고 중1 수학을 편안하게 시작하도록 준비합니다.'
+    IntroTitle = '초등에서 중등으로<br>넘어가는 연결 고리'
+    Intros = @(
+      '예비중1 수학과외는 초등 5·6학년의 분수·소수 계산, 비와 비율, 문장제를 먼저 점검합니다. 이 단원이 흔들리면 중1의 정수와 유리수, 문자와 식이 갑자기 어렵게 느껴지기 때문입니다.',
+      '초6 2학기와 겨울방학에는 빈틈을 보완한 뒤 소인수분해, 정수와 유리수, 문자와 식, 일차방정식을 미리 경험하며 중학교 첫 지필 시험에 필요한 풀이 습관을 만듭니다.'
+    )
+    Topics = @(
+      '초등 수학 빈틈 점검|분수의 사칙연산, 소수 계산, 약수와 배수처럼 중1 수학의 바탕이 되는 단원을 진단해 필요한 부분부터 보완합니다.',
+      '중1 수학 미리보기|소인수분해, 정수와 유리수, 문자와 식, 일차방정식, 좌표평면과 그래프를 학생 속도에 맞춰 미리 익힙니다.',
+      '문장제 · 서술형 준비|문제의 조건을 식으로 옮기고 풀이 과정을 순서대로 쓰는 연습으로 중학교 서술형 평가에 대비합니다.',
+      '중학교 시험 적응|중학교는 지필 평가와 수행평가가 함께 이루어집니다. 시험 범위를 정리하고 오답을 관리하는 방법을 미리 익힙니다.',
+      '겨울방학 계획|방학 기간에 맞춰 주간 목표를 세우고, 개학 전까지 중1 1학기 핵심 단원을 정리하도록 학습량을 조절합니다.',
+      '공부 습관 만들기|정해진 시간에 과제를 하고 틀린 문제를 다시 푸는 습관을 만들어 중학교 생활에 자연스럽게 적응하도록 돕습니다.'
+    )
+    Faqs = @(
+      '예비중1 수학은 언제부터 준비하면 좋을까요?|초6 2학기부터 초등 과정의 빈틈을 점검하고, 겨울방학에 중1 1학기 핵심 단원을 미리 익히는 흐름을 권합니다. 시작 시기는 학생 상황에 따라 조정합니다.',
+      '초등 수학이 부족한데 선행을 해도 될까요?|빈틈이 있는 상태에서 진도만 나가면 중학교 수학이 더 어려워집니다. 진단 후 필요한 초등 단원을 먼저 보완하고 중1 과정을 연결합니다.',
+      '중1 첫 시험은 어떻게 준비하나요?|학교별 시험 범위와 교과서를 확인해 개념 정리, 유형 연습, 서술형 풀이 순서로 준비합니다.',
+      '방문 수업이 가능한가요?|거주 위치와 희망 시간을 확인한 뒤 대면 수업 가능 여부를 안내합니다. 이동이 어려운 경우 온라인 수업도 협의할 수 있습니다.'
+    )
+  },
+  [pscustomobject]@{
+    Slug = 'pre-high1'; Name = '예비고1 수학과외'; En = 'PRE HIGH 1'
+    Title = '예비고1 수학과외 | 경기 중3 겨울방학 고1 공통수학 준비 1:1'
+    Description = '경기 예비고1 수학과외. 중학 수학 전 범위의 빈틈을 점검하고 고1 공통수학과 첫 내신을 준비합니다. 중3 겨울방학 상담 010-2928-3614'
+    Heading = '예비고1<br>수학과외'
+    Hero = '고등학교 첫 내신은 이후 입시 계획에 영향을 줍니다. 중학 수학의 빈틈을 정리하고 고1 공통수학을 학생 속도에 맞춰 준비합니다.'
+    IntroTitle = '중학 수학을 정리하고<br>고1 공통수학으로'
+    Intros = @(
+      '예비고1 수학과외는 중학교 과정 중 고등 수학의 바탕이 되는 인수분해, 이차방정식, 이차함수, 일차함수와 도형 단원을 먼저 점검합니다. 이 부분이 흔들리면 고1 진도가 빨라질수록 따라가기 어려워집니다.',
+      '중3 2학기와 겨울방학에는 다항식, 방정식과 부등식, 경우의 수, 행렬 등 공통수학1의 핵심 단원을 학생 속도에 맞춰 익히고 고등학교 첫 시험에 맞는 학습 습관을 만듭니다.'
+    )
+    Topics = @(
+      '중학 수학 총정리|인수분해, 이차방정식, 이차함수, 도형의 성질처럼 고등 수학에서 바로 쓰이는 중학 단원을 진단하고 짧고 굵게 다시 정리합니다.',
+      '공통수학1 준비|다항식, 방정식과 부등식, 경우의 수, 행렬을 차례로 익히며 고1 1학기 내신 범위를 미리 경험합니다.',
+      '공통수학2 연결|도형의 방정식, 집합과 명제, 함수와 그래프로 이어지는 흐름을 미리 보고 학생 상황에 맞춰 진도를 정합니다.',
+      '고1 첫 내신 대비|학교별 교과서와 부교재, 시험 범위를 확인해 고등학교 첫 지필 평가를 준비합니다.',
+      '수능 기초 다지기|고1 모의고사 유형을 경험하며 정해진 시간 안에 정확하게 푸는 연습을 시작합니다.',
+      '고등 공부 습관|중학교보다 많아지는 분량에 맞춰 개념 복습과 오답 재풀이 계획을 세우고 스스로 공부 시간을 관리하도록 돕습니다.'
+    )
+    Faqs = @(
+      '예비고1 수학은 어디까지 선행해야 하나요?|중학 수학의 완성도에 따라 다릅니다. 빈틈이 많다면 중학 과정 정리가 먼저이고, 기초가 탄탄하다면 공통수학1부터 차근차근 진도를 나갑니다.',
+      '중학 수학이 부족한 중3도 가능한가요?|네. 진단으로 필요한 중학 단원을 찾아 보완한 뒤 고1 과정으로 연결합니다.',
+      '고1 첫 내신은 어떻게 준비하나요?|학교별 교과서와 부교재, 기출 경향을 확인해 시험 4~5주 전부터 범위 정리와 실전 연습을 진행합니다.',
+      '방문 수업이 가능한가요?|거주 위치와 희망 시간을 확인한 뒤 대면 수업 가능 여부를 안내합니다. 이동이 어려운 경우 온라인 수업도 협의할 수 있습니다.'
+    )
+  }
+)
+
+$townTopics = @(
+  '{P} 초등 수학과외|{P} 초등학생은 연산과 분수, 문장제처럼 자주 흔들리는 기초수학을 먼저 점검하고 스스로 하는 수학공부 습관을 만듭니다.',
+  '{P} 중등 수학과외|{P} 중학생은 학교별 시험 범위와 교과서, 프린트를 확인해 수학내신과 서술형을 준비하고 비어 있는 이전 단원을 함께 보완합니다.',
+  '{P} 고등 수학과외|{P} 고등학생은 내신 기출과 모의고사 결과로 취약 단원을 찾고 수학내신과 수능수학의 비중을 시기별로 정합니다.',
+  '{P} 수학내신 대비|시험 4~5주 전부터 학교별 기출 유형과 부교재를 중심으로 범위를 정리하고 실전처럼 시간을 재며 풀어 봅니다.',
+  '{P} 기초수학 보완|학년과 상관없이 막히는 지점을 찾아 이전 학년 단원부터 다시 세운 뒤 현재 진도와 병행합니다.',
+  '{P} 예비중1 · 예비고1|학년이 바뀌는 시기에는 이전 과정을 정리하고 다음 학년 핵심 단원을 미리 경험해 첫 시험을 편안하게 준비합니다.'
+)
+
+# 주제·생활권 페이지 공통 본문
+function Write-ArticlePage {
+    param([string]$Path, [string]$Title, [string]$Description, $Crumbs, [string]$Eyebrow, [string]$Heading, [string]$Hero, [string]$En, [string]$IntroTitle, $Intros, $Topics, [string]$TopicHeading, $Faqs, [string]$Name, [string]$Area, $Related, [string]$RelatedHeading)
+    $root = Get-Root $Path
+    $topicHtml = $Topics | ForEach-Object { $t = $_.Split('|'); "          <article><h3>$($t[0])</h3><p>$($t[1])</p></article>" }
+    $introHtml = ($Intros | ForEach-Object { "<p>$_</p>" }) -join ''
+    $body = @"
+      <section class="location-intro" aria-labelledby="intro-title">
+        <div><p class="section-number">$En</p><h2 id="intro-title">$IntroTitle</h2></div>
+        <div class="location-intro-copy">$introHtml</div>
+      </section>
+      <section class="topic-guide" aria-labelledby="topic-title">
+        <p class="section-number">CURRICULUM</p><h2 id="topic-title">$TopicHeading</h2>
+        <div class="topic-grid">
+$($topicHtml -join "`n")
+        </div>
+      </section>
+$lessonFlow
+$(Get-FaqHtml "$Name 자주 묻는 질문" $Faqs)
+$(Get-LinkGrid 'related-title' 'RELATED' $RelatedHeading $Related $root)
+"@
+    Write-Page -Path $Path -Title $Title -Description $Description -Crumbs $Crumbs -Eyebrow $Eyebrow -Heading $Heading -Hero $Hero -Body $body -CtaTitle "$Name 상담" -Graph @((Get-ServiceLd $Name $Description $Area $Path), (Get-FaqLd $Faqs))
+}
+
+# 시·군·구 페이지에 넣는 생활권 링크
+function Get-TownSection([string]$Path, [string]$Root, [string]$Name) {
+    $matched = @($towns | Where-Object { $_.Parent.StartsWith($Path) })
+    if ($matched.Count -eq 0) { return '' }
+    return Get-LinkGrid 'town-title' 'NEIGHBORHOOD' "$Name 인기 생활권 수학과외" @($matched | ForEach-Object { [pscustomobject]@{ Path = "towns/$($_.Slug)/"; Text = "$($_.Name) 수학과외" } }) $Root
+}
+
 $homeCrumb = [pscustomobject]@{ Name = '경기도'; Path = '' }
 $pages.Add([pscustomobject]@{ Url = "$siteUrl/"; Title = '경기 수학과외 | 초등·중등·고등 1:1 맞춤 수학 과외'; Description = '경기도 31개 시군 초등·중등·고등 1:1 수학과외. 초등 기초수학, 중등 수학내신, 고등 수능수학까지 현재 실력을 진단하고 학습 계획을 세웁니다.' })
 
@@ -394,6 +574,7 @@ $(Get-LevelCards $city)
       </section>
 $lessonFlow
 $districtSection
+$(Get-TownSection $cityPath '../..' $area.Short)
 $(Get-FaqHtml "$($area.Short) 수학과외 자주 묻는 질문" $cityFaqs)
 "@
     $cityTitle = "$($area.Short) 수학과외 | $($area.Spots) 초등·중등·고등 1:1 맞춤 수업"
@@ -429,6 +610,7 @@ $(Get-LevelCards $district)
           <article><h3>예비고2 · 예비고3</h3><p>예비고2와 예비고3은 선택 과목과 학교 진도, 내신·수능 목표에 맞춰 학습 순서를 구체화합니다.</p></article>
         </div>
       </section>
+$(Get-TownSection $district.Path '../../..' $district.N)
 $(Get-LinkGrid 'nearby-title' 'NEARBY DISTRICT' "$($area.Name) 다른 구 수학과외" $nearby '../../..')
 $(Get-FaqHtml "$($district.N) 수학과외 자주 묻는 질문" $districtFaqs)
 "@
@@ -442,6 +624,33 @@ $(Get-FaqHtml "$($district.N) 수학과외 자주 묻는 질문" $districtFaqs)
             Write-LevelPage $district $level $related "함께 찾는 $($district.N) 수학과외"
         }
     }
+}
+
+$topicLinks = @($topicPages | ForEach-Object { [pscustomobject]@{ Path = "$($_.Slug)/"; Text = $_.Name } })
+$levelHubLinks = @($levels | ForEach-Object { [pscustomobject]@{ Path = "$($_.Slug)/"; Text = "경기 $($_.Label) 수학과외" } })
+$townHubLink = [pscustomobject]@{ Path = 'towns/'; Text = '신도시·생활권 수학과외' }
+
+# 주제 페이지
+foreach ($topic in $topicPages) {
+    $related = @($topicLinks | Where-Object { $_.Path -ne "$($topic.Slug)/" }) + $levelHubLinks + @($townHubLink)
+    Write-ArticlePage -Path "$($topic.Slug)/" -Title $topic.Title -Description $topic.Description -Crumbs @($homeCrumb, [pscustomobject]@{ Name = $topic.Name; Path = "$($topic.Slug)/" }) -Eyebrow "GYEONGGI · $($topic.En)" -Heading $topic.Heading -Hero $topic.Hero -En $topic.En -IntroTitle $topic.IntroTitle -Intros $topic.Intros -Topics $topic.Topics -TopicHeading "$($topic.Name)<br>무엇을 배우나요" -Faqs (Expand-Faqs $topic.Faqs $gyeonggi) -Name $topic.Name -Area '경기도' -Related $related -RelatedHeading '함께 찾는 수학과외'
+}
+
+# 신도시·생활권 목록 페이지
+$townCrumb = [pscustomobject]@{ Name = '신도시·생활권'; Path = 'towns/' }
+$townHubFaqs = Expand-Faqs $regionFaqs ([pscustomobject]@{ P = '신도시'; F = ''; N = ''; S = ''; Focus = '' })
+Write-ArticlePage -Path 'towns/' -Title '경기 신도시 수학과외 | 광교·동탄·판교·일산·평촌 1:1 수학' -Description '광교, 동탄, 판교, 일산, 평촌, 위례, 미사, 다산, 운정 등 경기 신도시·생활권별 초등·중등·고등 1:1 수학과외 안내. 상담 010-2928-3614' -Crumbs @($homeCrumb, $townCrumb) -Eyebrow 'GYEONGGI · NEIGHBORHOOD' -Heading '신도시·생활권<br>수학과외' -Hero '같은 시·군 안에서도 신도시와 생활권마다 학교 일정과 이동 여건이 다릅니다. 가까운 생활권을 골라 수업 안내를 확인하세요.' -En 'NEIGHBORHOOD' -IntroTitle '생활권에 맞춘<br>수학 수업' -Intros @('신도시는 학교가 새로 생기거나 학생 수가 빠르게 늘면서 학교마다 진도와 시험 범위, 출제 경향이 다양합니다. 학생이 다니는 학교의 일정과 범위를 먼저 확인하는 것이 수업 계획의 출발점입니다.', '각 생활권 페이지에서 초등 기초수학, 중등 수학내신, 고등 수능수학 안내와 상위 시·군·구의 학교급별 수업 정보를 함께 확인할 수 있습니다.') -Topics @($towns | ForEach-Object { "$($_.Name) 수학과외|$($_.CityName) $($_.Spots) 생활권의 초등·중등·고등 1:1 수학 수업을 안내합니다." }) -TopicHeading '생활권별<br>수학과외' -Faqs $townHubFaqs -Name '신도시 수학과외' -Area '경기도' -Related (@($towns | ForEach-Object { [pscustomobject]@{ Path = "towns/$($_.Slug)/"; Text = "$($_.Name) 수학과외" } })) -RelatedHeading '생활권 바로가기'
+
+# 신도시·생활권 페이지
+foreach ($town in $towns) {
+    $townPath = "towns/$($town.Slug)/"
+    $place = [pscustomobject]@{ P = $town.Name; F = "$($town.CityName) $($town.Name)"; N = $town.Name; S = $town.Spots; Focus = $town.Point }
+    $parentShort = $town.ParentName
+    $related = @([pscustomobject]@{ Path = $town.Parent; Text = "$parentShort 수학과외" }) + @($levels | ForEach-Object { [pscustomobject]@{ Path = "$($town.Parent)$($_.Slug)/"; Text = "$parentShort $($_.Label) 수학과외" } })
+    $related += @($towns | Where-Object { $_.Slug -ne $town.Slug -and $_.CityName -eq $town.CityName } | ForEach-Object { [pscustomobject]@{ Path = "towns/$($_.Slug)/"; Text = "$($_.Name) 수학과외" } })
+    $related += @($topicLinks | Where-Object { $_.Path -in @('visiting/', 'online/') }) + @($townHubLink)
+    $description = "$($town.CityName) $($town.Name) 수학과외. $($town.Spots) 초등 기초수학, 중등 수학내신, 고등 수능수학까지 1:1로 진단하고 수업합니다. 상담 010-2928-3614"
+    Write-ArticlePage -Path $townPath -Title "$($town.Name) 수학과외 | $($town.Spots) 초등·중등·고등 1:1 수학" -Description $description -Crumbs (@($homeCrumb) + @($town.ParentCrumbs) + @([pscustomobject]@{ Name = "$($town.Name) 수학과외"; Path = $townPath })) -Eyebrow "GYEONGGI · $($town.CityName) · $($town.Name)" -Heading "$($town.Name)<br>수학과외" -Hero "$($town.CityName) $($town.Spots) 생활권 학생을 위한 초등·중등·고등 1:1 맞춤 수학 수업입니다. 최근 시험과 공부 습관을 진단한 뒤 학교 진도에 맞춰 계획을 세웁니다." -En 'NEIGHBORHOOD' -IntroTitle "$($town.Name) 학생에게<br>맞춘 수학 수업" -Intros @($town.Point, "$($town.Name) 수학과외는 최근 시험지와 교재, 평소 공부 습관을 확인하는 진단에서 시작합니다. 개념 이해, 풀이 순서, 계산 습관 중 어디에서 막혔는지 구분해 1:1 수업 계획을 세우며, 대면 수업 가능 여부는 위치와 시간을 확인한 뒤 안내하고 온라인 수업도 협의할 수 있습니다.") -Topics @($townTopics | ForEach-Object { Fill $_ $place }) -TopicHeading "$($town.Name) 초등·중등·고등<br>수학수업 안내" -Faqs (Expand-Faqs $regionFaqs $place) -Name "$($town.Name) 수학과외" -Area $place.F -Related $related -RelatedHeading "함께 찾는 $($town.Name) 수학과외"
 }
 
 $sitemapEntries = $pages | ForEach-Object { "  <url><loc>$($_.Url)</loc><lastmod>$lastmod</lastmod></url>" }
