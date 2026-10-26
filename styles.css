@@ -147,6 +147,16 @@ h2 { margin: 0; font-family: "Gowun Batang", serif; font-size: clamp(2.3rem, 5vw
 .topic-grid h3 { margin: 0 0 .7rem; font-size: 1.08rem; }
 .topic-grid p { margin: 0; color: var(--muted); font-size: .95rem; }
 .faq { padding-top: 6rem; }
+.school-guide { padding: 6rem 0; border-top: 1px solid var(--line); }
+.school-guide h2 { font-size: clamp(2rem, 4vw, 3.6rem); }
+.school-note { max-width: 760px; margin: 2rem 0 0; color: #46585b; }
+.school-group { margin-top: 3rem; }
+.school-group h3 { display: flex; align-items: baseline; gap: .6rem; margin: 0 0 1rem; font-size: 1.15rem; }
+.school-group h3 span { color: var(--muted); font-size: .88rem; font-weight: 600; }
+.school-group h4 { margin: 1.4rem 0 .6rem; color: var(--deep); font-size: .95rem; }
+.school-list { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0; padding: 0; list-style: none; }
+.school-list li { padding: .35rem .75rem; background: var(--white); border: 1px solid var(--line); font-size: .9rem; }
+.school-source { margin: 2.5rem 0 0; color: var(--muted); font-size: .8rem; }
 .home-faq { max-width: var(--max-width); margin: 0 auto; padding: 0 24px 8rem; }
 .faq-list { margin-top: 3rem; border-top: 1px solid var(--line); }
 .faq-list details { border-bottom: 1px solid var(--line); }

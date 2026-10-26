@@ -1,7 +1,7 @@
 ﻿$ErrorActionPreference = 'Stop'
 
 $siteUrl = 'https://edumoa.kr'
-$lastmod = '2026-10-24'
+$lastmod = '2026-10-26'
 $ogImage = 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&amp;fit=crop&amp;w=1200&amp;h=630&amp;q=80'
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 
@@ -158,6 +158,58 @@ $lessonFlow = @"
       </section>
 "@
 
+# 학교 목록: tools/extract-schools.py로 만든 data/gyeonggi-schools.csv (City, District, Level, Name, BaseDate)
+$schoolIndex = @{}
+$schoolBaseDate = ''
+foreach ($row in (Import-Csv -Path (Join-Path $PSScriptRoot 'data\gyeonggi-schools.csv') -Encoding UTF8)) {
+    $key = "$($row.City)|$($row.District)|$($row.Level)"
+    if (-not $schoolIndex.ContainsKey($key)) { $schoolIndex[$key] = [System.Collections.Generic.List[string]]::new() }
+    $schoolIndex[$key].Add($row.Name)
+    $schoolBaseDate = $row.BaseDate
+}
+$schoolLevelNames = @{ elementary = '초등학교'; middle = '중학교'; high = '고등학교' }
+$schoolLevelNotes = @{
+    '초등학교' = '교과서 진도와 단원평가 일정'
+    '중학교' = '시험 범위와 교과서·프린트, 서술형 출제 경향'
+    '고등학교' = '선택 과목과 내신 기출, 모의고사 일정'
+}
+
+# Districts: 구 이름 목록 (구가 없는 시·군은 @(''))
+function Get-SchoolSection($Place, [string]$City, $Districts, $LevelNames) {
+    $total = @()
+    $blocks = @()
+    foreach ($levelName in $LevelNames) {
+        $groups = @($Districts | ForEach-Object {
+            $key = "$City|$_|$levelName"
+            if ($schoolIndex.ContainsKey($key)) { [pscustomobject]@{ District = $_; Names = @($schoolIndex[$key]) } }
+        })
+        $count = ($groups | ForEach-Object { $_.Names.Count } | Measure-Object -Sum).Sum
+        if (-not $count) { continue }
+        $total += "$levelName $($count)곳"
+        $lists = $groups | ForEach-Object {
+            $items = ($_.Names | ForEach-Object { "<li>$_</li>" }) -join ''
+            if ($Districts.Count -gt 1) { "          <h4>$($_.District) $levelName</h4><ul class=`"school-list`">$items</ul>" } else { "          <ul class=`"school-list`">$items</ul>" }
+        }
+        $blocks += @"
+        <div class="school-group">
+          <h3>$($Place.P) $levelName 수학과외 <span>$($count)곳</span></h3>
+$($lists -join "`n")
+        </div>
+"@
+    }
+    if ($blocks.Count -eq 0) { return '' }
+    $notes = if ($LevelNames.Count -gt 1) { '진도와 시험 범위' } else { $schoolLevelNotes[$LevelNames[0]] }
+    $heading = if ($LevelNames.Count -gt 1) { "$($Place.P) 초·중·고등학교<br>수학과외" } else { "$($Place.P) $($LevelNames[0])<br>수학과외" }
+    return @"
+      <section class="school-guide" aria-labelledby="school-title">
+        <p class="section-number">SCHOOLS</p><h2 id="school-title">$heading</h2>
+        <p class="school-note">$($Place.F)에는 $($total -join ', ')이 있습니다. 학생이 다니는 학교의 $($notes)을 확인해 수업을 계획하며, 수업 가능 여부는 거주 위치와 시간을 확인한 뒤 안내합니다.</p>
+$($blocks -join "`n")
+        <p class="school-source">학교 목록 출처: 전국초중등학교위치표준데이터 ($schoolBaseDate 기준)</p>
+      </section>
+"@
+}
+
 $pages = [System.Collections.Generic.List[object]]::new()
 $script:variantIndex = 0
 
@@ -305,7 +357,7 @@ $Body
     $pages.Add([pscustomobject]@{ Url = $canonical; Title = $Title; Description = $Description })
 }
 
-function Write-LevelPage($Place, $Level, $Related, [string]$RelatedHeading) {
+function Write-LevelPage($Place, $Level, $Related, [string]$RelatedHeading, [string]$Schools = '') {
     $path = "$($Place.Path)$($Level.Slug)/"
     $p = $Place.P
     $name = "$p $($Level.Label) 수학과외"
@@ -334,6 +386,7 @@ $($grades -join "`n")
 $($topics -join "`n")
         </div>
       </section>
+$Schools
 $lessonFlow
 $(Get-FaqHtml "$name 자주 묻는 질문" $faqs)
 $relatedHtml
@@ -550,6 +603,8 @@ foreach ($area in $areas) {
         })
     }
 
+    $cityDistrictNames = if ($districts.Count -gt 0) { @($districts | ForEach-Object { $_.N }) } else { @('') }
+
     # 시·군 페이지
     $cityFaqs = Expand-Faqs $regionFaqs $city
     $districtSection = ''
@@ -562,6 +617,7 @@ foreach ($area in $areas) {
         <div class="location-intro-copy"><p>경기 $($area.Name) 수학과외는 최근 시험지와 사용하는 교재, 평소 공부 시간을 확인하는 진단에서 시작합니다. 같은 학년이라도 개념의 빈틈과 목표가 다르므로 설명 방식과 과제량을 학생별로 조정합니다.</p><p>$($area.Short) 초등 수학의 개념과 연산, 중등 수학내신의 서술형 풀이, 고등 수학의 개념 연결과 수능수학 문제 해석까지 지금 필요한 단계에 집중합니다.</p><p>$($area.Focus) 대면 수업 가능 여부와 시간은 상담 후 안내하며, 학습 상황에 따라 온라인 수업도 협의할 수 있습니다.</p></div>
       </section>
 $(Get-LevelCards $city)
+$(Get-SchoolSection $city $area.Name $cityDistrictNames @('초등학교', '중학교', '고등학교'))
       <section class="grade-guide" aria-labelledby="grade-title">
         <p class="section-number">GRADE TRANSITION</p>
         <h2 id="grade-title">다음 학년의 수학을<br>한발 먼저 준비합니다</h2>
@@ -588,7 +644,7 @@ $(Get-FaqHtml "$($area.Short) 수학과외 자주 묻는 질문" $cityFaqs)
         } else {
             $related += [pscustomobject]@{ Path = "$($level.Slug)/"; Text = "경기 $($level.Label) 수학과외" }
         }
-        Write-LevelPage $city $level $related "함께 찾는 $($area.Short) 수학과외"
+        Write-LevelPage $city $level $related "함께 찾는 $($area.Short) 수학과외" (Get-SchoolSection $city $area.Name $cityDistrictNames @($schoolLevelNames[$level.Slug]))
     }
 
     # 구 페이지
@@ -601,6 +657,7 @@ $(Get-FaqHtml "$($area.Short) 수학과외 자주 묻는 질문" $cityFaqs)
         <div class="location-intro-copy"><p>경기 $($area.Name) $($district.N) 수학과외는 최근 시험지와 교재, 평소 공부 습관을 먼저 확인합니다. 정답 개수만 보지 않고 개념 이해, 풀이 순서, 계산 습관 중 어디에서 막혔는지 구분해 수업 계획을 세웁니다.</p><p>$($district.S) 초등 기초수학부터 중등 수학내신, 고등 수능대비까지 학생의 학년과 목표에 맞춰 수업합니다.</p><p>$($district.Focus) 대면 수업 가능 여부와 시간은 학생의 학년과 위치에 따라 상담 후 안내하며 온라인 수업도 협의할 수 있습니다.</p></div>
       </section>
 $(Get-LevelCards $district)
+$(Get-SchoolSection $district $area.Name @($district.N) @('초등학교', '중학교', '고등학교'))
       <section class="grade-guide" aria-labelledby="grade-title">
         <p class="section-number">GRADE TRANSITION</p><h2 id="grade-title">다음 학년의 수학을<br>한발 먼저 준비합니다</h2>
         <div class="grade-grid">
@@ -621,7 +678,7 @@ $(Get-FaqHtml "$($district.N) 수학과외 자주 묻는 질문" $districtFaqs)
         foreach ($level in $levels) {
             $related = @(Get-OtherLevelLinks $district $level) + @([pscustomobject]@{ Path = $district.Path; Text = "$($district.N) 수학과외" }, [pscustomobject]@{ Path = "$cityPath$($level.Slug)/"; Text = "$($area.Short) $($level.Label) 수학과외" })
             $related += @($districts | Where-Object { $_.Slug -ne $district.Slug } | ForEach-Object { [pscustomobject]@{ Path = "$($_.Path)$($level.Slug)/"; Text = "$($_.N) $($level.Label) 수학과외" } })
-            Write-LevelPage $district $level $related "함께 찾는 $($district.N) 수학과외"
+            Write-LevelPage $district $level $related "함께 찾는 $($district.N) 수학과외" (Get-SchoolSection $district $area.Name @($district.N) @($schoolLevelNames[$level.Slug]))
         }
     }
 }
