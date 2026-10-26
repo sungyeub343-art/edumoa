@@ -19,3 +19,11 @@ GitHub Pages에서 별도 빌드 없이 정적 파일을 직접 배포합니다.
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\generate-location-pages.ps1
 ```
+### 학교 목록 갱신
+
+지역·학교급 페이지의 초·중·고등학교 목록은 `data/gyeonggi-schools.csv`에서 가져옵니다. 공공데이터포털의 전국초중등학교위치표준데이터(.xls)를 새로 받으면 아래 순서로 갱신합니다. (`xlrd` 패키지 필요)
+
+```powershell
+python tools/extract-schools.py "<다운로드한 전국초중등학교위치표준데이터 .xls 경로>"
+powershell -ExecutionPolicy Bypass -File .\generate-location-pages.ps1
+```
