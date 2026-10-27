@@ -130,6 +130,7 @@ h2 { margin: 0; font-family: "Gowun Batang", serif; font-size: clamp(2.3rem, 5vw
 .levels { max-width: var(--max-width); margin: 0 auto; padding: 8rem 24px 0; }
 .level-guide { padding-bottom: 6rem; }
 .levels .area-links + .area-links { margin-top: 1.5rem; }
+.levels .level-extra { margin-top: 1.5rem; }
 .levels + .home-faq { padding-top: 8rem; }
 .level-guide h2, .topic-guide h2, .faq h2 { font-size: clamp(2rem, 4vw, 3.6rem); }
 .level-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 3rem; }
